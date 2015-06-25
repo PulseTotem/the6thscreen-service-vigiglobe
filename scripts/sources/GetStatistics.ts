@@ -7,6 +7,9 @@
 /// <reference path="../../t6s-core/core-backend/scripts/server/SourceItf.ts" />
 /// <reference path="../../t6s-core/core-backend/scripts/RestClient.ts" />
 
+/// <reference path="../../t6s-core/core-backend/t6s-core/core/scripts/infotype/CounterList.ts" />
+/// <reference path="../../t6s-core/core-backend/t6s-core/core/scripts/infotype/Counter.ts" />
+
 /// <reference path="../VigiglobeNamespaceManager.ts" />
 
 var uuid : any = require('node-uuid');
@@ -44,7 +47,29 @@ class GetStatistics extends SourceItf {
 		};
 
 		var success = function(result) {
-			Logger.debug(result);
+			var response = result.data();
+
+			var counterList:CounterList = new CounterList();
+
+			counterList.setId(uuid.v1());
+			counterList.setPriority(0);
+
+			response.data.forEach(function(counterDesc) {
+				var counter: Counter = new Counter();
+
+				counter.setId(counterDesc[0]);
+				counter.setValue(counterDesc[1])
+
+				counter.setDurationToDisplay(parseInt(self.getParams().InfoDuration));
+
+				counterList.addCounter(counter);
+			});
+
+			counterList.setDurationToDisplay(parseInt(self.getParams().InfoDuration) * response.data.length);
+
+			Logger.debug(counterList);
+
+			self.getSourceNamespaceManager().sendNewInfoToClient(counterList);
 		};
 
 		var today = moment();
