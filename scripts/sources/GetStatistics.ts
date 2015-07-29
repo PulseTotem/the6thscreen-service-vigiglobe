@@ -32,6 +32,8 @@ class GetStatistics extends SourceItf {
 	 */
 	constructor(params : any, vigiglobeNamespaceManager : VigiglobeNamespaceManager) {
 		super(params, vigiglobeNamespaceManager);
+
+		this.run();
 	}
 
 	/**
