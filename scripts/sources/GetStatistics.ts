@@ -56,22 +56,27 @@ class GetStatistics extends SourceItf {
 			counterList.setId(uuid.v1());
 			counterList.setPriority(0);
 
-			response.data.forEach(function(counterDesc) {
-				var counter: Counter = new Counter();
+			if(typeof(response.data) != "undefined" && typeof(response.data.messages) != "undefined") {
 
-				counter.setId(counterDesc[0]);
-				counter.setValue(counterDesc[1])
+				response.data.messages.forEach(function (counterDesc) {
+					var counter:Counter = new Counter();
 
-				counter.setDurationToDisplay(parseInt(self.getParams().InfoDuration));
+					counter.setId(counterDesc[0]);
+					counter.setValue(counterDesc[1])
 
-				counterList.addCounter(counter);
-			});
+					counter.setDurationToDisplay(parseInt(self.getParams().InfoDuration));
 
-			counterList.setDurationToDisplay(parseInt(self.getParams().InfoDuration) * response.data.length);
+					counterList.addCounter(counter);
+				});
 
-			Logger.debug(counterList);
+				counterList.setDurationToDisplay(parseInt(self.getParams().InfoDuration) * response.data.length);
 
-			self.getSourceNamespaceManager().sendNewInfoToClient(counterList);
+				Logger.debug(counterList);
+
+				self.getSourceNamespaceManager().sendNewInfoToClient(counterList);
+			} else { // Something to do ???
+				Logger.error("Invalid response message from Vigiglobe API.");
+			}
 		};
 
 		var today = moment();
