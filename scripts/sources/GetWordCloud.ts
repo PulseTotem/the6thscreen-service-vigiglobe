@@ -65,16 +65,21 @@ class GetWordCloud extends SourceItf {
 			for(var tagWord in response.data) {
 				var tagDesc = response.data[tagWord];
 
-				var tag: Tag = new Tag();
+				if(typeof(tagDesc.messages) != "undefined") {
 
-				tag.setId(tagWord);
-				tag.setName(tagWord);
+					var tag:Tag = new Tag();
 
-				tag.setPopularity(tagDesc[0][1]);
+					tag.setId(tagWord);
+					tag.setName(tagWord);
 
-				tag.setDurationToDisplay(parseInt(self.getParams().InfoDuration));
+					tag.setPopularity(tagDesc.messages[0][1]);
 
-				tagList.addTag(tag);
+					tag.setDurationToDisplay(parseInt(self.getParams().InfoDuration));
+
+					tagList.addTag(tag);
+				} else { // Something to do ?
+					Logger.error("Missing 'messages' attributes in tag description '" + tagWord + "'.");
+				}
 			}
 
 			tagList.setDurationToDisplay(parseInt(self.getParams().InfoDuration) * tagList.getTags().length);
