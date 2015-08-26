@@ -80,6 +80,8 @@ class GetStatistics extends SourceItf {
 		};
 
 		var today = moment();
+		today.utcOffset(0);
+
 		today.milliseconds(0);
 		today.seconds(0);
 		today.minutes(0);
@@ -94,6 +96,8 @@ class GetStatistics extends SourceItf {
 		var timeTo = encodeURIComponent(today.format());
 
 		var projectId = self.getParams().VigiglobeProjectId;
+
+		Logger.info("get : " + "http://api.vigiglo.be/api/statistics/v1/volume?language=%5B%22fr%22%5D&granularity=day&timeFrom=" + timeFrom + "&count=messages&project_id=" + projectId + "&timeTo=" + timeTo);
 
 		RestClient.get("http://api.vigiglo.be/api/statistics/v1/volume?language=%5B%22fr%22%5D&granularity=day&timeFrom=" + timeFrom + "&count=messages&project_id=" + projectId + "&timeTo=" + timeTo, success, fail);
 	}
